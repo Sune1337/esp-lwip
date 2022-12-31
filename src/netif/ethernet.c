@@ -88,6 +88,11 @@ ethernet_input(struct pbuf *p, struct netif *netif)
 
   LWIP_ASSERT_CORE_LOCKED();
 
+
+  // Increase tot ethernet frames counter.
+  TOT_STATS_INC(tot.recv_packets);
+  TOT_STATS_ADD(tot.recv_bytes, p->tot_len);
+
   if (p->len <= SIZEOF_ETH_HDR) {
     /* a packet with only an ethernet header (or less) is not valid for us */
     ETHARP_STATS_INC(etharp.proterr);
@@ -307,6 +312,10 @@ ethernet_output(struct netif * netif, struct pbuf * p,
               (netif->hwaddr_len == ETH_HWADDR_LEN));
   LWIP_DEBUGF(ETHARP_DEBUG | LWIP_DBG_TRACE,
               ("ethernet_output: sending packet %p\n", (void *)p));
+
+  // Increase tot ethernet frames counter.
+  TOT_STATS_INC(tot.xmit_packets);
+  TOT_STATS_ADD(tot.xmit_bytes, p->tot_len);
 
   /* send the packet */
   return netif->linkoutput(netif, p);

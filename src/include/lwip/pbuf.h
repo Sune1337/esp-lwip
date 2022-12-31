@@ -226,6 +226,9 @@ struct pbuf {
   struct netif *l2_owner;
   void *l2_buf;
 #endif
+
+  /** Timestamp when packet was received. */
+  int64_t timestamp;
 };
 
 

@@ -228,6 +228,15 @@ struct stats_mib2_netif_ctrs {
   u32_t ifouterrors;
 };
 
+
+/** LWIP total counter */
+struct lwip_tot {
+  STAT_COUNTER recv_packets;
+  STAT_COUNTER xmit_packets;
+  STAT_COUNTER recv_bytes;
+  STAT_COUNTER xmit_bytes;
+};
+
 /** lwIP stats container */
 struct stats_ {
 #if LINK_STATS
@@ -298,6 +307,8 @@ struct stats_ {
   /** SNMP MIB2 */
   struct stats_mib2 mib2;
 #endif
+/** LWIP total counter */
+struct lwip_tot tot;
 };
 
 /** Global variable containing lwIP internal statistics. Add this to your debugger's watchlist. */
@@ -314,6 +325,7 @@ void stats_init(void);
                                 } \
                              } while(0)
 #define STATS_GET(x) lwip_stats.x
+#define STATS_ADD(x, y) lwip_stats.x += y
 #else /* LWIP_STATS */
 #define stats_init()
 #define STATS_INC(x)
@@ -466,6 +478,9 @@ void stats_init(void);
 #else
 #define MIB2_STATS_INC(x)
 #endif
+
+#define TOT_STATS_INC(x) STATS_INC(x)
+#define TOT_STATS_ADD(x, y) STATS_ADD(x, y)
 
 /* Display of statistics */
 #if LWIP_STATS_DISPLAY
